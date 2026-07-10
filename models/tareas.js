@@ -1,6 +1,16 @@
 let tareas = [
-  { id: 1, titulo: 'Revisar documentación de la API', completada: false },
-  { id: 2, titulo: 'Configurar certificado HTTPS', completada: true }
+  {
+    id: 1,
+    titulo: 'Revisar documentación de la API',
+    ciudad: 'Monterrey',
+    completada: false
+  },
+  {
+    id: 2,
+    titulo: 'Configurar certificado HTTPS',
+    ciudad: 'Guadalajara',
+    completada: true
+  }
 ];
 
 let siguienteId = 3;
@@ -10,10 +20,11 @@ module.exports = {
 
   obtenerPorId: (id) => tareas.find(t => t.id === id),
 
-  crear: (titulo) => {
+  crear: (titulo,ciudad) => {
     const nueva = {
       id: siguienteId++,
       titulo,
+      ciudad,
       completada: false
     };
 

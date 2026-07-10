@@ -23,4 +23,8 @@ app.get('/api/salud', (req, res) => {
 const tareasRouter = require('./routes/tareas');
 app.use('/api/tareas', tareasRouter);
 
+
+const climaRoutes = require("./routes/clima");
+app.use("/api/clima", climaRoutes);
+
 module.exports = app;
