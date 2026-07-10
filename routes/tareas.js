@@ -1,3 +1,5 @@
+const obtenerClima = require("../services/weatherService");
+
 const express = require('express');
 const router = express.Router();
 const { body, param, validationResult } = require('express-validator');
@@ -51,11 +53,19 @@ router.post(
         .withMessage('El título debe contener entre 1 y 100 caracteres')
         .escape(),
 
+    body("ciudad")
+    .isString()
+    .withMessage("La ciudad debe ser texto")
+    .trim()
+    .notEmpty()
+    .withMessage("La ciudad es obligatoria")
+    .escape(),
+
     validar,
 
     (req, res) => {
 
-        const nueva = tareasModel.crear(req.body.titulo);
+        const nueva = tareasModel.crear(req.body.titulo, req.body.ciudad);
 
         res.status(201).json(nueva);
 
@@ -79,6 +89,13 @@ router.put(
         .optional()
         .isBoolean(),
 
+    body("ciudad")
+    .optional()
+    .isString()
+    .trim()
+    .notEmpty()
+    .escape(),
+
     validar,
 
     (req, res) => {
@@ -97,6 +114,57 @@ router.put(
         res.status(200).json(actualizada);
 
     }
+);
+
+// GET /api/tareas/:id/clima
+
+router.get(
+    "/:id/clima",
+
+    param("id").isInt(),
+
+    validar,
+
+    async (req, res) => {
+
+        const tarea = tareasModel.obtenerPorId(
+            Number(req.params.id)
+        );
+
+        if (!tarea) {
+
+            return res.status(404).json({
+                mensaje: "Tarea no encontrada"
+            });
+
+        }
+
+        try {
+
+            const clima = await obtenerClima(
+                tarea.ciudad
+            );
+
+            res.status(200).json({
+
+                tarea,
+
+                clima
+
+            });
+
+        } catch (error) {
+
+            res.status(502).json({
+
+                mensaje: "No fue posible consultar el servicio del clima."
+
+            });
+
+        }
+
+    }
+
 );
 
 // DELETE /api/tareas/:id
