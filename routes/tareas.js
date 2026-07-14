@@ -156,9 +156,7 @@ router.get(
         } catch (error) {
 
             res.status(502).json({
-
-                mensaje: "No fue posible consultar el servicio del clima."
-
+                mensaje: error.message
             });
 
         }

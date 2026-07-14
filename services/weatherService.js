@@ -4,17 +4,48 @@ const obtenerClima = async (ciudad) => {
 
     const apiKey = process.env.WEATHER_API_KEY;
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${apiKey}&units=metric&lang=es`;
+    const url = "https://api.openweathermap.org/data/2.5/weather";
 
-    const respuesta = await axios.get(url, {
-        timeout: 5000
-    });
+    try {
 
-    return {
-        ciudad: respuesta.data.name,
-        temperatura: respuesta.data.main.temp,
-        descripcion: respuesta.data.weather[0].description
-    };
+        const respuesta = await axios.get(url, {
+
+            params: {
+                q: ciudad,
+                appid: apiKey,
+                units: "metric",
+                lang: "es"
+            },
+
+            timeout: 5000
+
+        });
+
+        return {
+            ciudad: respuesta.data.name,
+            temperatura: respuesta.data.main.temp,
+            descripcion: respuesta.data.weather[0].description
+        };
+
+    } catch (error) {
+
+        if (error.response) {
+            throw new Error(
+                `El servicio de clima respondió con error ${error.response.status}`
+            );
+        }
+
+        if (error.code === "ECONNABORTED") {
+            throw new Error(
+                "El servicio de clima tardó demasiado en responder"
+            );
+        }
+
+        throw new Error(
+            "No se pudo conectar con el servicio de clima"
+        );
+
+    }
 
 };
 

@@ -34,8 +34,8 @@ router.get(
         } catch (error) {
 
             res.status(502).json({
-                mensaje: "No fue posible obtener información del servicio de clima."
-            });
+        mensaje: error.message
+    });
 
         }
 
