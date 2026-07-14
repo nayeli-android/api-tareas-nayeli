@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const authRouter = require('./routes/auth');
+const verificarToken = require('./middleware/auth');
 
 const app = express();
 
@@ -19,12 +21,13 @@ app.get('/api/salud', (req, res) => {
     });
 });
 
-// Rutas de tareas
+// Rutas
 const tareasRouter = require('./routes/tareas');
-app.use('/api/tareas', tareasRouter);
+const climaRoutes = require('./routes/clima');
 
+app.use('/api/auth', authRouter);
 
-const climaRoutes = require("./routes/clima");
-app.use("/api/clima", climaRoutes);
+app.use('/api/tareas', verificarToken, tareasRouter);
+app.use('/api/clima', verificarToken, climaRoutes);
 
 module.exports = app;
