@@ -49,4 +49,10 @@ router.post(
   }
 );
 
+const verificarToken = require('../middleware/auth');
+
+router.get('/perfil', verificarToken, (req, res) => {
+  res.status(200).json(req.usuario);
+});
+
 module.exports = router;
